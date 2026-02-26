@@ -18,11 +18,11 @@ async function authenticate() {
     process.exit(0);
   }
 
-  const consentUrl = xeroService.getConsentUrl();
-
   console.log('\n🔐 Xero Authentication Required\n');
-  console.log('Opening your browser to authenticate with Xero...');
-  console.log('If the browser doesn\'t open, visit this URL:\n');
+
+  const consentUrl = await xeroService.getConsentUrl();
+
+  console.log('Copy and paste this URL into your browser:\n');
   console.log(consentUrl);
   console.log('\n');
 

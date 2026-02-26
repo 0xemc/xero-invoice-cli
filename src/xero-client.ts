@@ -50,8 +50,8 @@ export class XeroService {
     }
   }
 
-  public getConsentUrl(): string {
-    return this.client.buildConsentUrl();
+  public async getConsentUrl(): Promise<string> {
+    return await this.client.buildConsentUrl();
   }
 
   public async handleCallback(url: string): Promise<void> {
@@ -80,6 +80,13 @@ export class XeroService {
       throw new Error('No token set available. Please authenticate first using: npm run auth');
     }
 
+    // Set the token on the client first
+    this.client.setTokenSet({
+      access_token: this.tokenSet.access_token,
+      refresh_token: this.tokenSet.refresh_token,
+      expires_at: this.tokenSet.expires_at,
+    });
+
     // Check if token is expired or about to expire (within 5 minutes)
     const now = Date.now();
     const expiresAt = this.tokenSet.expires_at * 1000; // Convert to milliseconds
@@ -89,13 +96,6 @@ export class XeroService {
       console.log('Token expired, refreshing...');
       await this.refreshToken();
     }
-
-    // Set the token on the client
-    this.client.setTokenSet({
-      access_token: this.tokenSet.access_token,
-      refresh_token: this.tokenSet.refresh_token,
-      expires_at: this.tokenSet.expires_at,
-    });
   }
 
   private async refreshToken(): Promise<void> {

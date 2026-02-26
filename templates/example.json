@@ -1,0 +1,39 @@
+{
+  "name": "Example Invoice Template",
+  "description": "Generic example invoice template. Copy and customize this file instead of editing it directly.",
+  "invoicePrefix": "EX-",
+  "contact": {
+    "name": "Example Client Name",
+    "email": "client@example.com"
+  },
+  "invoiceSettings": {
+    "type": "ACCREC",
+    "lineAmountTypes": "Exclusive",
+    "dueInDays": 14,
+    "status": "DRAFT"
+  },
+  "lineItems": [
+    {
+      "description": "Example Service Description",
+      "itemCode": "SERVICE-CODE",
+      "accountCode": "200",
+      "quantity": 1,
+      "unitAmount": 100,
+      "taxType": "OUTPUT"
+    }
+  ],
+  "variables": {
+    "quantity": {
+      "description": "Number of units for the service",
+      "default": 1
+    },
+    "invoiceNumber": {
+      "description": "Invoice number (e.g., EX-1)",
+      "required": true
+    },
+    "date": {
+      "description": "Invoice date (YYYY-MM-DD or 'today')",
+      "default": "today"
+    }
+  }
+}
