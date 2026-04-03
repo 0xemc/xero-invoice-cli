@@ -41,10 +41,9 @@ function matchEventToPattern(eventTitle: string, patterns: LineItemPattern[]): L
 }
 
 function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
+  // Extract the local date directly from the ISO string to avoid UTC offset shifting
+  const localDate = dateStr.includes('T') ? dateStr.split('T')[0] : dateStr;
+  const [year, month, day] = localDate.split('-');
   return `${day}/${month}/${year}`;
 }
 

@@ -157,4 +157,11 @@ export class XeroService {
   public isAuthenticated(): boolean {
     return this.tokenSet !== null;
   }
+
+  public clearTokens(): void {
+    this.tokenSet = null;
+    if (fs.existsSync(TOKEN_PATH)) {
+      fs.unlinkSync(TOKEN_PATH);
+    }
+  }
 }

@@ -16,9 +16,15 @@ async function authenticate() {
   const xeroService = new XeroService(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES);
 
   if (xeroService.isAuthenticated()) {
-    console.log('✓ Already authenticated!');
-    console.log('You can now use the CLI commands.');
-    process.exit(0);
+    try {
+      await xeroService.ensureValidToken();
+      console.log('✓ Already authenticated and token is valid!');
+      console.log('You can now use the CLI commands.');
+      process.exit(0);
+    } catch (err) {
+      console.log('⚠ Existing token is invalid or expired — re-authenticating...\n');
+      xeroService.clearTokens();
+    }
   }
 
   console.log('\n🔐 Xero Authentication Required\n');

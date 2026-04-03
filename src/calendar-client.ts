@@ -174,8 +174,8 @@ export async function listEvents(
 
   const response = await calendar.events.list({
     calendarId: actualCalendarId,
-    timeMin: new Date(startDate).toISOString(),
-    timeMax: new Date(endDate).toISOString(),
+    timeMin: new Date(`${startDate}T00:00:00+10:00`).toISOString(),
+    timeMax: new Date(`${endDate}T23:59:59+10:00`).toISOString(),
     maxResults,
     singleEvents: true,
     orderBy: 'startTime',
