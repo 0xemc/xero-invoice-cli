@@ -2,8 +2,7 @@
   "name": "Example Invoice Template",
   "description": "Generic example invoice template. Copy and customize this file instead of editing it directly.",
   "invoicePrefix": "EX-",
-  "orgTenantId": "your-tenant-id-here",
-  "orgShortCode": "!XXXXXX",
+  "orgShortCode": "!xxxxx",
   "contact": {
     "name": "Example Client Name",
     "email": "client@example.com"
@@ -21,6 +20,41 @@
       "accountCode": "200",
       "quantity": 1,
       "unitAmount": 100,
+      "taxType": "OUTPUT"
+    }
+  ],
+  "lineItemPatterns": [
+    {
+      "id": "consulting-session",
+      "pattern": "consulting|consultation",
+      "description": "Consulting Session",
+      "itemCode": "CONSULT",
+      "accountCode": "200",
+      "taxType": "OUTPUT"
+    },
+    {
+      "id": "development-work",
+      "pattern": "development|dev work|coding",
+      "description": "Development Work",
+      "itemCode": "DEV",
+      "accountCode": "200",
+      "taxType": "OUTPUT"
+    },
+    {
+      "id": "meeting",
+      "pattern": "meeting|standup|sync",
+      "description": "Meeting",
+      "itemCode": "MEETING",
+      "accountCode": "200",
+      "taxType": "OUTPUT"
+    },
+    {
+      "id": "special-project",
+      "pattern": "special project|urgent",
+      "description": "Special Project (Premium Rate)",
+      "itemCode": "DEV",
+      "accountCode": "200",
+      "unitAmount": 200,
       "taxType": "OUTPUT"
     }
   ],

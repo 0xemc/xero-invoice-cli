@@ -6,3 +6,7 @@ dist/
 tokens.json
 templates/*.json
 !templates/example.json
+
+# Google Calendar credentials
+gcal-credentials.json
+gcal-token.json
