@@ -2,6 +2,8 @@
   "name": "Example Invoice Template",
   "description": "Generic example invoice template. Copy and customize this file instead of editing it directly.",
   "invoicePrefix": "EX-",
+  "orgTenantId": "your-tenant-id-here",
+  "orgShortCode": "!XXXXXX",
   "contact": {
     "name": "Example Client Name",
     "email": "client@example.com"

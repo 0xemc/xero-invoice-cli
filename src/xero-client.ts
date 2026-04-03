@@ -50,8 +50,35 @@ export class XeroService {
     }
   }
 
+  private lastState: string = '';
+
   public async getConsentUrl(): Promise<string> {
-    return await this.client.buildConsentUrl();
+    const url = await this.client.buildConsentUrl();
+    // Extract and cache the state param so manual auth can reconstruct the callback URL
+    try {
+      const parsed = new URL(url);
+      this.lastState = parsed.searchParams.get('state') || '';
+    } catch {}
+    return url;
+  }
+
+  public getLastState(): string {
+    return this.lastState;
+  }
+
+  public async listTenants(): Promise<{ tenantId: string; tenantName: string }[]> {
+    await this.client.updateTenants();
+    return (this.client.tenants || []).map(t => ({
+      tenantId: t.tenantId,
+      tenantName: t.tenantName,
+    }));
+  }
+
+  public setTenantId(tenantId: string): void {
+    if (this.tokenSet) {
+      this.tokenSet.tenant_id = tenantId;
+      this.saveTokens();
+    }
   }
 
   public async handleCallback(url: string): Promise<void> {

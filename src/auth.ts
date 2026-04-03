@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import 'dotenv/config';
 import * as http from 'http';
+import * as readline from 'readline';
 import { XeroService } from './xero-client.js';
 
 const CLIENT_ID = process.env.CLIENT_ID!;
@@ -8,6 +9,8 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET!;
 const REDIRECT_URI = process.env.REDIRECT_URI || 'http://localhost:3000/callback';
 const SCOPES = (process.env.SCOPES || 'openid profile email accounting.transactions accounting.settings offline_access').split(' ');
 const PORT = parseInt(process.env.PORT || '3000');
+
+const isManual = process.argv.includes('--manual');
 
 async function authenticate() {
   const xeroService = new XeroService(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES);
@@ -25,6 +28,34 @@ async function authenticate() {
   console.log('Copy and paste this URL into your browser:\n');
   console.log(consentUrl);
   console.log('\n');
+
+  if (isManual) {
+    console.log('After authorizing, your browser will fail to load the redirect URL.');
+    console.log('Paste either the full URL from the address bar, or just the "code" value:\n');
+
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    const input: string = await new Promise(resolve => rl.question('> ', answer => { rl.close(); resolve(answer.trim()); }));
+
+    try {
+      let fullUrl: string;
+      if (input.includes('://')) {
+        // Full URL pasted — extract just the query string and rebase onto REDIRECT_URI
+        const parsed = new URL(input);
+        fullUrl = `${REDIRECT_URI}${parsed.search}`;
+      } else {
+        // Just the code pasted — reconstruct using stored state
+        const state = xeroService.getLastState();
+        fullUrl = `${REDIRECT_URI}?code=${encodeURIComponent(input)}&state=${encodeURIComponent(state)}`;
+      }
+      await xeroService.handleCallback(fullUrl);
+      console.log('\n✓ Authentication successful!');
+      console.log('You can now use the CLI commands.');
+      process.exit(0);
+    } catch (error) {
+      console.error('Authentication error:', error);
+      process.exit(1);
+    }
+  }
 
   // Create a temporary HTTP server to handle the OAuth callback
   const server = http.createServer(async (req, res) => {
